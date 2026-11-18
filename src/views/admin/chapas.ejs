@@ -1,0 +1,31 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Chapas e memorial</h1></div>
+<%- include('nav') %>
+<div class="card">
+  <h2>Cadastrar chapa</h2>
+  <p class="muted small">Cadastre a nova chapa eleita (ou chapas antigas, para o memorial). Depois clique em "Tornar gestão atual" quando ela assumir.</p>
+  <form method="post" action="/admin/chapas/nova" class="form row-form">
+    <label>Nome da chapa <input name="name" required maxlength="80" placeholder="Ex.: Germinar"></label>
+    <label>Período <input name="period" maxlength="40" placeholder="Ex.: 2025/2026"></label>
+    <button class="btn btn-primary" type="submit">+ Cadastrar</button>
+  </form>
+</div>
+<div class="grid cards">
+  <% chapas.forEach(function (c) { %>
+    <div class="card chapa-card<%= c.is_current ? ' current' : '' %>">
+      <% if (c.is_current) { %><span class="tag tag-date">⭐ gestão atual</span><% } %>
+      <h3>Chapa <%= c.name %></h3>
+      <p class="muted small"><%= c.period || 'período não informado' %> · <%= c.items %> publicações · <%= c.photos %> fotos</p>
+      <div class="actions">
+        <a class="btn btn-soft small" href="/admin/chapas/<%= c.id %>">✎ Editar memorial e fotos</a>
+        <a class="btn btn-ghost small" href="/t/memorial?chapa=<%= c.id %>">Ver</a>
+        <% if (!c.is_current) { %>
+          <form method="post" action="/admin/chapas/<%= c.id %>/atual" data-confirm="Tornar a chapa <%= c.name %> a gestão atual? O topo do site passará a mostrar 'Gestão <%= c.name %>'.">
+            <button class="btn btn-primary small" type="submit">Tornar gestão atual</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+<%- include('../partials/foot') %>

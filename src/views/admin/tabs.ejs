@@ -1,0 +1,46 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Abas e sub-abas</h1></div>
+<%- include('nav') %>
+<div class="card">
+  <h2>Criar nova aba</h2>
+  <form method="post" action="/admin/abas/nova" class="form row-form">
+    <label>Nome <input name="title" required maxlength="60" placeholder="Ex.: Monitorias"></label>
+    <label>Tipo
+      <select name="type"><% Object.keys(TAB_TYPES).forEach(function (k) { %><option value="<%= k %>"><%= TAB_TYPES[k] %></option><% }) %></select>
+    </label>
+    <label>Fica dentro de (sub-aba)
+      <select name="parent_id">
+        <option value="">— nenhuma (aba principal do menu) —</option>
+        <% tree.forEach(function (t) { %><option value="<%= t.id %>"><%= '— '.repeat(t.depth) %><%= t.title %></option><% }) %>
+      </select>
+    </label>
+    <button class="btn btn-primary" type="submit">+ Criar</button>
+  </form>
+</div>
+<div class="table-wrap">
+<table class="table tabs-table">
+  <thead><tr><th>Ordem</th><th>Aba</th><th>Tipo</th><th>Publicações</th><th>Situação</th><th></th></tr></thead>
+  <tbody>
+  <% tree.forEach(function (t) { %>
+    <tr id="aba-<%= t.id %>">
+      <td class="nowrap">
+        <form method="post" action="/admin/abas/<%= t.id %>/mover" class="inline-form"><input type="hidden" name="dir" value="up"><button class="icon-btn" title="Subir">▲</button></form>
+        <form method="post" action="/admin/abas/<%= t.id %>/mover" class="inline-form"><input type="hidden" name="dir" value="down"><button class="icon-btn" title="Descer">▼</button></form>
+      </td>
+      <td style="padding-left:<%= 12 + t.depth * 26 %>px"><%= t.depth ? '↳ ' : '' %><a href="/t/<%= t.slug %>"><b><%= t.title %></b></a> <small class="muted">/t/<%= t.slug %></small></td>
+      <td class="small"><%= SPECIAL_TYPES[t.type] || TAB_TYPES[t.type].split(' (')[0] %></td>
+      <td><%= ['posts','events','calendar','cardapio','videos'].includes(t.type) ? t.count : '—' %></td>
+      <td class="small">
+        <% if (home === t.slug) { %><span class="tag tag-date">🏠 inicial</span><% } %>
+        <% if (t.system) { %><span class="tag">sistema</span><% } %>
+        <% if (!t.visible) { %><span class="tag tag-warn">oculta</span><% } %>
+        <% if (t.admin_only) { %><span class="tag tag-lock">🔒 admin</span><% } %>
+      </td>
+      <td class="nowrap"><a class="btn btn-soft small" href="/admin/abas/<%= t.id %>">Editar</a></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+</div>
+<p class="muted small">Abas marcadas como "sistema" (Mural, Blog, Memorial, Denúncia, Manual) não podem ser apagadas, mas podem ser renomeadas, reordenadas e ocultadas.</p>
+<%- include('../partials/foot') %>

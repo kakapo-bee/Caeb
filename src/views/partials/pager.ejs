@@ -1,0 +1,8 @@
+<% if (pages > 1) {
+  const q = (p) => { const sp = new URLSearchParams(Object.assign({}, locals.query || {}, { pagina: p })); return '?' + sp.toString(); }; %>
+<nav class="pager" aria-label="Páginas">
+  <% if (page > 1) { %><a class="btn btn-soft" href="<%= q(page - 1) %>">← Anterior</a><% } %>
+  <span>Página <%= page %> de <%= pages %></span>
+  <% if (page < pages) { %><a class="btn btn-soft" href="<%= q(page + 1) %>">Próxima →</a><% } %>
+</nav>
+<% } %>

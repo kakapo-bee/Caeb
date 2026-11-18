@@ -1,0 +1,36 @@
+<%- include('../partials/head') %>
+<nav class="crumbs"><a href="/acolhimento">Caixa de denúncias</a><span>›</span><span>#<%= r.id %></span></nav>
+<div class="report-layout">
+  <article class="card">
+    <span class="tag status-<%= r.status %>"><%= STATUS[r.status] %></span> <span class="tag"><%= r.category %></span>
+    <h1><%= r.subject %></h1>
+    <p class="muted small">Recebida em <%= r.anonymous ? u.fmtDate(r.created_at) : u.fmtDateTime(r.created_at) %></p>
+    <div class="report-body"><%= r.body %></div>
+    <hr>
+    <% if (r.anonymous) { %>
+      <p><b>🕶 Denúncia anônima.</b> <span class="muted">O site não guarda nenhuma informação sobre quem enviou.</span></p>
+    <% } else { %>
+      <p><b>Enviada por:</b> <% if (r.uid) { %><a href="/u/<%= r.uid %>"><%= r.username %></a> · <a href="mailto:<%= r.email %>"><%= r.email %></a><% } else { %>(conta removida)<% } %></p>
+      <% if (r.contact) { %><p><b>Contato preferido:</b> <%= r.contact %></p><% } %>
+    <% } %>
+  </article>
+  <aside class="card">
+    <h2>Acompanhamento</h2>
+    <form method="post" action="/acolhimento/<%= r.id %>" class="form">
+      <label>Status
+        <select name="status">
+          <% Object.keys(STATUS).forEach(function (k) { %><option value="<%= k %>" <%= r.status === k ? 'selected' : '' %>><%= STATUS[k] %></option><% }) %>
+        </select>
+      </label>
+      <label>Anotações internas (só o acolhimento vê)
+        <textarea name="notes" rows="8"><%= r.notes %></textarea>
+      </label>
+      <button class="btn btn-primary" type="submit">Salvar</button>
+    </form>
+    <form method="post" action="/acolhimento/<%= r.id %>" data-confirm="Apagar definitivamente esta denúncia?" class="mt">
+      <input type="hidden" name="action" value="apagar">
+      <button class="btn btn-danger small" type="submit">🗑 Apagar denúncia</button>
+    </form>
+  </aside>
+</div>
+<%- include('../partials/foot') %>

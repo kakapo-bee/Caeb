@@ -1,0 +1,13 @@
+<%- include('../partials/head') %>
+<div class="auth">
+  <div class="card auth-card">
+    <img class="auth-logo" src="/static/img/logo-192.png" alt="" width="84" height="84">
+    <h1>Confirmar criação de conta</h1>
+    <p>Criar a conta <b><%= p.username %></b> com o e-mail <b><%= p.email %></b>?</p>
+    <form method="post" action="/confirmar/<%= token %>">
+      <button class="btn btn-primary block" type="submit">Confirmar</button>
+    </form>
+    <p class="muted small">Se não foi você quem pediu, é só fechar esta página.</p>
+  </div>
+</div>
+<%- include('../partials/foot') %>

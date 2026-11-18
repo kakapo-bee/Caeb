@@ -1,0 +1,17 @@
+<article class="card blog-card">
+  <header class="author">
+    <a href="/u/<%= p.user_id %>" class="author-link"><%- include('../partials/avatar', { a: p, size: 44 }) %></a>
+    <div>
+      <a href="/u/<%= p.user_id %>" class="author-name"><%= p.username %></a>
+      <% if (u.isAdmin(p)) { %><span class="tag tag-admin">gestão</span><% } %>
+      <div class="muted small"><%= u.fmtDateTime(p.created_at) %></div>
+    </div>
+  </header>
+  <h3><a href="/blog/<%= p.id %>"><%= p.title %></a></h3>
+  <% if (p.image) { %><a href="/blog/<%= p.id %>"><img class="blog-img" src="/uploads/<%= p.image %>" alt="" loading="lazy"></a><% } %>
+  <p class="muted"><%= u.plain(p.body, 260) %></p>
+  <footer class="blog-foot">
+    <%- include('like', { p }) %>
+    <a class="btn btn-ghost small" href="/blog/<%= p.id %>">Ler mais →</a>
+  </footer>
+</article>

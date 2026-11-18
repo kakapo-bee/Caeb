@@ -1,0 +1,21 @@
+<% const _slug = it.tab_slug || tab.slug; const _href = '/t/' + _slug + '/' + it.id; %>
+<article class="card item-card<%= it.pinned ? ' pinned' : '' %>">
+  <% if (it.image) { %><a href="<%= _href %>" class="card-img"><img src="/uploads/<%= it.image %>" alt="" loading="lazy"></a><% } %>
+  <div class="card-body">
+    <div class="card-meta">
+      <% if (it.pinned) { %><span class="tag tag-pin">📌 fixado</span><% } %>
+      <% if (it.tab_title) { %><span class="tag"><%= it.tab_title %></span><% } %>
+      <% if (it.event_date) { %><span class="tag tag-date">📅 <%= u.fmtDate(it.event_date) %><%= it.end_date ? ' a ' + u.fmtDate(it.end_date) : '' %><%= it.event_time ? ' · ' + it.event_time : '' %></span><% } %>
+      <% if (it.location) { %><span class="tag">📍 <%= it.location %></span><% } %>
+    </div>
+    <h3><a href="<%= _href %>"><%= it.title %></a></h3>
+    <% const _p = u.plain(it.body); if (_p) { %><p class="muted"><%= _p %></p><% } %>
+    <div class="card-foot">
+      <small class="muted">Publicado em <%= u.fmtDate(it.created_at) %></small>
+      <span class="card-icons">
+        <% if (it.attachment) { %><a class="tag tag-file" href="/uploads/<%= it.attachment %>" target="_blank" rel="noopener">📄 Arquivo</a><% } %>
+        <% if (it.video_url || it.video_file) { %><span class="tag">▶ vídeo</span><% } %>
+      </span>
+    </div>
+  </div>
+</article>

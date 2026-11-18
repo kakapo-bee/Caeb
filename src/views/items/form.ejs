@@ -1,0 +1,84 @@
+<%- include('../partials/head') %>
+<%- include('../partials/crumbs') %>
+<% const T = tab.type; const v = (k) => (item[k] == null ? '' : item[k]); %>
+<div class="card form-card wide">
+  <h1><%= item.id ? 'Editar publicação' : 'Nova publicação' %> <small class="muted">em <%= tab.title %></small></h1>
+  <form method="post" action="<%= item.id ? '/itens/' + item.id + '/editar' : '/t/' + tab.slug + '/novo' %>" enctype="multipart/form-data" class="form">
+    <label>Título
+      <input name="title" required maxlength="200" value="<%= v('title') %>" placeholder="<%= T === 'cardapio' ? 'Ex.: Almoço, Jantar, Café da manhã' : '' %>">
+    </label>
+
+    <% if (['events', 'calendar', 'cardapio'].includes(T) || v('event_date')) { %>
+    <div class="row3">
+      <label>Data <%= ['events', 'calendar', 'cardapio'].includes(T) ? '' : '(opcional)' %>
+        <input type="date" name="event_date" value="<%= v('event_date') %>" <%= ['events', 'calendar', 'cardapio'].includes(T) ? 'required' : '' %>>
+      </label>
+      <% if (T !== 'cardapio') { %>
+      <label>Até (opcional, para vários dias)
+        <input type="date" name="end_date" value="<%= v('end_date') %>">
+      </label>
+      <% } %>
+      <label>Horário (opcional)
+        <input type="time" name="event_time" value="<%= v('event_time') %>">
+      </label>
+    </div>
+    <% } %>
+    <% if (['events', 'calendar'].includes(T)) { %>
+      <label>Local (opcional)
+        <input name="location" maxlength="200" value="<%= v('location') %>" placeholder="Ex.: Auditório do Setor de Ciências Biológicas">
+      </label>
+    <% } %>
+
+    <label><%= T === 'cardapio' ? 'Pratos' : (T === 'videos' ? 'Descrição (opcional)' : 'Texto') %>
+      <%- include('../partials/editor', { name: 'body', value: v('body'), rows: T === 'cardapio' ? 6 : 12 }) %>
+    </label>
+
+    <% if (T === 'videos' || T === 'posts' || T === 'events' || v('video_url') || v('video_file')) { %>
+    <fieldset>
+      <legend>Vídeo <%= T === 'videos' ? '(link OU arquivo)' : '(opcional)' %></legend>
+      <label>Link do YouTube, Vimeo ou Google Drive
+        <input name="video_url" type="url" value="<%= v('video_url') %>" placeholder="https://www.youtube.com/watch?v=...">
+      </label>
+      <label>…ou envie um arquivo de vídeo (mp4/webm)
+        <input type="file" name="video_file" accept="video/mp4,video/webm,video/ogg,video/quicktime">
+      </label>
+      <% if (item.video_file) { %><label class="check"><input type="checkbox" name="remove_video_file" value="1"> remover vídeo enviado atual</label><% } %>
+    </fieldset>
+    <% } %>
+
+    <% if (T !== 'cardapio') { %>
+    <div class="row2">
+      <div>
+        <label>Imagem de capa (opcional)
+          <input type="file" name="image" accept="image/png,image/jpeg,image/gif,image/webp">
+        </label>
+        <% if (item.image) { %><div class="current-file"><img class="thumb" src="/uploads/<%= item.image %>" alt=""><label class="check"><input type="checkbox" name="remove_image" value="1"> remover</label></div><% } %>
+      </div>
+      <div>
+        <label>Arquivo anexo — PDF, documento, imagem (opcional)
+          <input type="file" name="attachment" accept=".pdf,.doc,.docx,.odt,.ppt,.pptx,.xls,.xlsx,.ods,image/*">
+        </label>
+        <% if (item.attachment) { %><div class="current-file">📄 <a href="/uploads/<%= item.attachment %>" target="_blank"><%= item.attachment_name || 'arquivo' %></a> <label class="check"><input type="checkbox" name="remove_attachment" value="1"> remover</label></div><% } %>
+      </div>
+    </div>
+    <% } %>
+
+    <div class="row2">
+      <label>Registrar no memorial da chapa
+        <select name="chapa_id">
+          <option value="">— nenhuma —</option>
+          <% chapas.forEach(function (c) { %><option value="<%= c.id %>" <%= Number(item.chapa_id) === c.id ? 'selected' : '' %>><%= c.name %><%= c.period ? ' (' + c.period + ')' : '' %><%= c.is_current ? ' — atual' : '' %></option><% }) %>
+        </select>
+      </label>
+      <% if (!['cardapio', 'calendar'].includes(T)) { %>
+      <label class="check big"><input type="checkbox" name="pinned" value="1" <%= Number(item.pinned) ? 'checked' : '' %>> 📌 Fixar no topo da aba</label>
+      <% } %>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit"><%= item.id ? 'Salvar alterações' : 'Publicar' %></button>
+      <a class="btn btn-ghost" href="/t/<%= tab.slug %><%= item.id ? '/' + item.id : '' %>">Cancelar</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/foot') %>

@@ -1,0 +1,16 @@
+<%- include('../partials/head') %>
+<div class="auth">
+  <div class="card auth-card">
+    <h1>Nova senha</h1>
+    <form method="post" action="/redefinir-senha/<%= token %>" class="form">
+      <label>Nova senha (mínimo 8 caracteres)
+        <input type="password" name="password" required minlength="8" autocomplete="new-password">
+      </label>
+      <label>Repita a nova senha
+        <input type="password" name="password2" required minlength="8" autocomplete="new-password">
+      </label>
+      <button class="btn btn-primary block" type="submit">Salvar nova senha</button>
+    </form>
+  </div>
+</div>
+<%- include('../partials/foot') %>

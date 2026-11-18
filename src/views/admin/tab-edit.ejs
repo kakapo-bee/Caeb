@@ -1,0 +1,44 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Editar aba "<%= tab.title %>"</h1></div>
+<%- include('nav') %>
+<div class="card form-card wide">
+  <form method="post" action="/admin/abas/<%= tab.id %>" class="form">
+    <div class="row2">
+      <label>Nome no menu <input name="title" required maxlength="60" value="<%= tab.title %>"></label>
+      <label>Endereço (aparece em /t/...) <input name="slug" maxlength="60" value="<%= tab.slug %>"></label>
+    </div>
+    <div class="row2">
+      <label>Tipo
+        <% if (tab.system || SPECIAL_TYPES[tab.type]) { %>
+          <input value="<%= SPECIAL_TYPES[tab.type] || TAB_TYPES[tab.type] %>" disabled>
+          <small class="muted">O tipo de abas do sistema não pode ser mudado.</small>
+        <% } else { %>
+          <select name="type"><% Object.keys(TAB_TYPES).forEach(function (k) { %><option value="<%= k %>" <%= tab.type === k ? 'selected' : '' %>><%= TAB_TYPES[k] %></option><% }) %></select>
+        <% } %>
+      </label>
+      <label>Fica dentro de
+        <select name="parent_id">
+          <option value="">— nenhuma (aba principal do menu) —</option>
+          <% parents.forEach(function (t) { %><option value="<%= t.id %>" <%= tab.parent_id === t.id ? 'selected' : '' %>><%= '— '.repeat(t.depth) %><%= t.title %></option><% }) %>
+        </select>
+      </label>
+    </div>
+    <label class="check big"><input type="checkbox" name="visible" value="1" <%= tab.visible ? 'checked' : '' %>> Visível no menu (desmarque para ocultar a aba de todo mundo que não é da administração)</label>
+    <label class="check big"><input type="checkbox" name="admin_only" value="1" <%= tab.admin_only ? 'checked' : '' %> <%= tab.system && tab.admin_only ? 'disabled' : '' %>> 🔒 Só contas administrativas podem ver<%= tab.system && tab.admin_only ? ' (obrigatório para o Manual)' : '' %></label>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Salvar</button>
+      <a class="btn btn-ghost" href="/admin/abas">Voltar</a>
+      <a class="btn btn-soft" href="/t/<%= tab.slug %>/texto">✎ Editar texto da aba</a>
+    </div>
+  </form>
+</div>
+<% if (!tab.system) { %>
+<div class="card danger-zone">
+  <h2>Apagar aba</h2>
+  <p>Apagar esta aba também apaga <b>todas as sub-abas e publicações</b> dentro dela. Se quiser só esconder, desmarque "Visível no menu".</p>
+  <form method="post" action="/admin/abas/<%= tab.id %>/apagar" data-confirm="Tem certeza? A aba, as sub-abas e TODAS as publicações dentro delas serão apagadas para sempre.">
+    <button class="btn btn-danger" type="submit">🗑 Apagar aba</button>
+  </form>
+</div>
+<% } %>
+<%- include('../partials/foot') %>

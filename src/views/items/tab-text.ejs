@@ -1,0 +1,14 @@
+<%- include('../partials/head') %>
+<%- include('../partials/crumbs', { last: 'Editar texto' }) %>
+<div class="card form-card wide">
+  <h1>Texto da aba "<%= tab.title %>"</h1>
+  <p class="muted">Este texto aparece no topo da aba<%= tab.type === 'page' ? ' (é o conteúdo principal desta página)' : ', acima das publicações' %>. Deixe em branco para não mostrar nada.</p>
+  <form method="post" action="/t/<%= tab.slug %>/texto" class="form">
+    <%- include('../partials/editor', { name: 'content', value: tab.content, rows: tab.type === 'page' ? 22 : 8 }) %>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Salvar</button>
+      <a class="btn btn-ghost" href="/t/<%= tab.slug %>">Cancelar</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/foot') %>

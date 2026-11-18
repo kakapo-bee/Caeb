@@ -1,0 +1,27 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>💙 Caixa de denúncias</h1></div>
+<p class="muted">Visível <b>somente</b> para contas de Acolhimento. Trate todas as informações com sigilo.</p>
+<div class="seg">
+  <a class="<%= !filter ? 'on' : '' %>" href="/acolhimento">Todas</a>
+  <% Object.keys(STATUS).forEach(function (k) { %><a class="<%= filter === k ? 'on' : '' %>" href="?status=<%= k %>"><%= STATUS[k] %></a><% }) %>
+</div>
+<% if (!reports.length) { %><div class="empty">Nenhuma denúncia aqui.</div><% } else { %>
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>#</th><th>Data</th><th>Assunto</th><th>Tipo</th><th>Autor(a)</th><th>Status</th></tr></thead>
+  <tbody>
+    <% reports.forEach(function (r) { %>
+      <tr class="<%= r.status === 'nova' ? 'row-new' : '' %>">
+        <td><%= r.id %></td>
+        <td><%= u.fmtDate(r.created_at) %></td>
+        <td><a href="/acolhimento/<%= r.id %>"><b><%= r.subject %></b></a></td>
+        <td class="small"><%= r.category %></td>
+        <td><%= r.anonymous ? '🕶 Anônima' : (r.username || '(conta removida)') %></td>
+        <td><span class="tag status-<%= r.status %>"><%= STATUS[r.status] %></span></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+<% } %>
+<%- include('../partials/foot') %>

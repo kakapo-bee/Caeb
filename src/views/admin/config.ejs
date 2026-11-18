@@ -1,0 +1,22 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Configurações do site</h1></div>
+<%- include('nav') %>
+<div class="card form-card wide">
+  <form method="post" action="/admin/config" class="form">
+    <div class="row2">
+      <label>Nome do site (topo) <input name="site_title" maxlength="60" value="<%= s.site_title %>"></label>
+      <label>Subtítulo (topo) <input name="site_subtitle" maxlength="100" value="<%= s.site_subtitle %>"></label>
+    </div>
+    <label>Texto do rodapé <input name="footer_text" maxlength="300" value="<%= s.footer_text %>"></label>
+    <div class="row2">
+      <label>Instagram (link ou @usuario) <input name="instagram" maxlength="200" value="<%= s.instagram %>"></label>
+      <label>E-mail de contato do CAEB <input type="email" name="contact_email" maxlength="200" value="<%= s.contact_email %>"></label>
+    </div>
+    <label>Página inicial do site (o que aparece ao entrar em /)
+      <select name="home_tab"><% tabs.forEach(function (t) { %><option value="<%= t.slug %>" <%= s.home_tab === t.slug ? 'selected' : '' %>><%= t.title %></option><% }) %></select>
+    </label>
+    <p class="muted small">A faixa "Gestão <%= chapa ? chapa.name : '...' %>" no topo vem da chapa marcada como atual em <a href="/admin/chapas">Chapas e memorial</a>.</p>
+    <div class="form-actions"><button class="btn btn-primary" type="submit">Salvar</button></div>
+  </form>
+</div>
+<%- include('../partials/foot') %>

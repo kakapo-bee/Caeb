@@ -1,0 +1,19 @@
+</main>
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <img src="/static/img/logo-192.png" alt="" width="48" height="48">
+      <div>
+        <strong><%= settings.site_title %></strong><br>
+        <small><%= settings.footer_text %></small>
+      </div>
+    </div>
+    <div class="footer-links">
+      <% if (chapa) { %><span>Gestão <b><%= chapa.name %></b><%= chapa.period ? ' · ' + chapa.period : '' %></span><% } %>
+      <% if (settings.instagram) { %><a href="<%= settings.instagram %>" target="_blank" rel="noopener">Instagram</a><% } %>
+      <% if (settings.contact_email) { %><a href="mailto:<%= settings.contact_email %>"><%= settings.contact_email %></a><% } %>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

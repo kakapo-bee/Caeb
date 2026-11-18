@@ -1,0 +1,56 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead') %>
+<div class="report-layout">
+  <section class="card report-info">
+    <h2>💙 Você não está sozinho(a)</h2>
+    <p>Este canal serve para relatar <b>assédio, discriminação, violência</b> ou qualquer situação que te fez sentir inseguro(a) no curso ou na universidade.</p>
+    <ul class="checks">
+      <li><b>Somente</b> as contas de <b>Acolhimento</b> do CAEB conseguem ler as denúncias. Nenhuma outra conta — nem a presidência — tem acesso.</li>
+      <li>Se você marcar <b>"Enviar de forma anônima"</b>, o site <b>não guarda quem enviou</b>. Nem a equipe de acolhimento, nem quem administra o servidor, consegue descobrir. Também não guardamos a hora exata, só o dia.</li>
+      <li>Se não for anônima, a equipe pode entrar em contato com você e você acompanha o andamento aqui embaixo.</li>
+    </ul>
+    <p class="muted small">Em caso de emergência, ligue 190 (Polícia) ou 180 (Central de Atendimento à Mulher). Você também pode procurar a Ouvidoria da UFPR.</p>
+    <% if (user && user.role === 'acolhimento') { %><a class="btn btn-primary" href="/acolhimento">Abrir caixa de denúncias<%= newReports ? ' (' + newReports + ' nova' + (newReports > 1 ? 's' : '') + ')' : '' %></a><% } %>
+  </section>
+
+  <section class="card">
+    <% if (!user) { %>
+      <h2>Enviar denúncia</h2>
+      <p>Para evitar abusos, é preciso estar logado(a) para enviar. <b>Mesmo logado(a), você pode enviar de forma anônima</b> — sua conta não fica ligada à denúncia.</p>
+      <a class="btn btn-primary" href="/entrar?voltar=/t/<%= tab.slug %>">Entrar</a> <a class="btn btn-ghost" href="/cadastro">Criar conta</a>
+    <% } else { %>
+      <h2>Enviar denúncia</h2>
+      <form method="post" action="/denuncia" class="form" id="report-form">
+        <label class="anon-toggle">
+          <input type="checkbox" name="anonymous" value="1" checked data-toggle-hide="#contact-field">
+          <span><b>Enviar de forma anônima</b><br><small class="muted">Ninguém saberá que foi você.</small></span>
+        </label>
+        <label>Tipo de situação
+          <select name="category">
+            <% CATEGORIES.forEach(function (c) { %><option><%= c %></option><% }) %>
+          </select>
+        </label>
+        <label>Assunto
+          <input name="subject" required maxlength="150" placeholder="Resumo em poucas palavras">
+        </label>
+        <label>O que aconteceu?
+          <textarea name="body" rows="9" required minlength="10" placeholder="Descreva com o máximo de detalhes que se sentir confortável: o que, quando, onde, quem estava envolvido..."></textarea>
+        </label>
+        <label id="contact-field" hidden>Como prefere ser contatado(a)? (opcional)
+          <input name="contact" maxlength="200" placeholder="Ex.: pelo meu e-mail, WhatsApp (41) 9..., pessoalmente">
+        </label>
+        <button class="btn btn-primary" type="submit">Enviar denúncia</button>
+      </form>
+    <% } %>
+  </section>
+</div>
+<% if (mine.length) { %>
+  <h2 class="section-title">Minhas denúncias identificadas</h2>
+  <p class="muted small">Denúncias anônimas não aparecem aqui, porque não ficam ligadas à sua conta.</p>
+  <ul class="cal-list">
+    <% mine.forEach(function (r) { %>
+      <li class="card"><span class="tag status-<%= r.status %>"><%= STATUS[r.status] %></span> <b><%= r.subject %></b> <span class="muted small"><%= r.category %> · <%= u.fmtDate(r.created_at) %></span></li>
+    <% }) %>
+  </ul>
+<% } %>
+<%- include('../partials/foot') %>

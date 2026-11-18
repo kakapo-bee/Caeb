@@ -1,0 +1,14 @@
+<%- include('../partials/head') %>
+<div class="auth">
+  <div class="card auth-card">
+    <h1>Esqueci minha senha</h1>
+    <p class="muted small">Digite o e-mail da sua conta. Vamos mandar um link para você criar uma nova senha.</p>
+    <form method="post" action="/esqueci-senha" class="form">
+      <label>E-mail
+        <input type="email" name="email" required placeholder="seunome@ufpr.br">
+      </label>
+      <button class="btn btn-primary block" type="submit">Enviar link</button>
+    </form>
+  </div>
+</div>
+<%- include('../partials/foot') %>

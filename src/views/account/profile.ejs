@@ -1,0 +1,44 @@
+<%- include('../partials/head') %>
+<div class="account-grid">
+  <section class="card profile-card">
+    <%- include('../partials/avatar', { a: profile, size: 120 }) %>
+    <h1 class="h2"><%= profile.username %></h1>
+    <span class="tag <%= u.isAdmin(profile) ? 'tag-admin' : '' %>"><%= u.ROLES[profile.role] %></span>
+    <dl class="facts">
+      <div><dt>E-mail</dt><dd><a href="mailto:<%= profile.email %>"><%= profile.email %></a></dd></div>
+      <div><dt>Postagens no blog</dt><dd><%= count %></dd></div>
+      <div><dt>Membro desde</dt><dd><%= u.fmtDate(profile.created_at) %></dd></div>
+    </dl>
+    <% if (profile.bio) { %><p class="bio"><%= profile.bio %></p><% } %>
+    <% if (user.id === profile.id) { %><a class="btn btn-soft" href="/conta">✎ Editar meu perfil</a><% } %>
+    <% if (isAdmin && user.id !== profile.id) { %>
+      <div class="admin-box">
+        <b>Administração</b>
+        <form method="post" action="/admin/usuarios/<%= profile.id %>/papel" class="inline-form">
+          <select name="role">
+            <% Object.keys(u.ROLES).forEach(function (r) { %><option value="<%= r %>" <%= profile.role === r ? 'selected' : '' %>><%= u.ROLES[r] %></option><% }) %>
+          </select>
+          <button class="btn btn-soft small" type="submit">Mudar cargo</button>
+        </form>
+        <form method="post" action="/admin/usuarios/<%= profile.id %>/blog">
+          <input type="hidden" name="blocked" value="<%= profile.blog_blocked ? 0 : 1 %>">
+          <button class="btn <%= profile.blog_blocked ? 'btn-soft' : 'btn-ghost' %> small" type="submit"><%= profile.blog_blocked ? '✅ Desbloquear no blog' : '🚫 Bloquear no blog' %></button>
+        </form>
+      </div>
+    <% } %>
+  </section>
+  <section>
+    <h2 class="section-title first">Postagens no Blog do CAEB</h2>
+    <% if (!posts.length) { %><div class="empty">Nenhuma postagem ainda.</div><% } %>
+    <div class="blog-list">
+      <% posts.forEach(function (p) { %>
+        <article class="card blog-card compact">
+          <h3><a href="/blog/<%= p.id %>"><%= p.title %></a></h3>
+          <p class="muted small"><%= u.fmtDateTime(p.created_at) %> · 💚 <%= p.likes %></p>
+          <p class="muted"><%= u.plain(p.body, 180) %></p>
+        </article>
+      <% }) %>
+    </div>
+  </section>
+</div>
+<%- include('../partials/foot') %>

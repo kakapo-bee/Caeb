@@ -1,0 +1,33 @@
+<%- include('../partials/head') %>
+<nav class="crumbs"><a href="/t/<%= tab.slug %>"><%= tab.title %></a><span>›</span><span><%= post.title %></span></nav>
+<article class="card article">
+  <header class="author">
+    <a href="/u/<%= post.user_id %>"><%- include('../partials/avatar', { a: post, size: 52 }) %></a>
+    <div>
+      <a href="/u/<%= post.user_id %>" class="author-name"><%= post.username %></a>
+      <% if (u.isAdmin(post)) { %><span class="tag tag-admin">gestão</span><% } %>
+      <div class="muted small"><%= u.fmtDateTime(post.created_at) %><%= post.updated_at ? ' · editado' : '' %></div>
+    </div>
+  </header>
+  <h1><%= post.title %></h1>
+  <% if (post.image) { %><img class="article-img" src="/uploads/<%= post.image %>" alt=""><% } %>
+  <div class="prose"><%- u.md(post.body) %></div>
+  <footer class="blog-foot">
+    <%- include('like', { p: post }) %>
+    <div class="actions">
+      <% if (user && user.id === post.user_id) { %><a class="btn btn-soft small" href="/blog/<%= post.id %>/editar">✎ Editar</a><% } %>
+      <% if (user && (user.id === post.user_id || isAdmin)) { %>
+        <form method="post" action="/blog/<%= post.id %>/apagar" data-confirm="Apagar esta postagem? Isso não pode ser desfeito.">
+          <button class="btn btn-danger small" type="submit">🗑 Apagar<%= user.id !== post.user_id ? ' (moderação)' : '' %></button>
+        </form>
+      <% } %>
+      <% if (isAdmin && user.id !== post.user_id) { %>
+        <form method="post" action="/admin/usuarios/<%= post.user_id %>/blog" data-confirm="Bloquear <%= post.username %> de publicar no blog?">
+          <input type="hidden" name="blocked" value="1">
+          <button class="btn btn-ghost small" type="submit">🚫 Bloquear autor(a) no blog</button>
+        </form>
+      <% } %>
+    </div>
+  </footer>
+</article>
+<%- include('../partials/foot') %>

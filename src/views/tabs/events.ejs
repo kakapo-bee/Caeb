@@ -1,0 +1,31 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead', { newButton: 'Novo evento' }) %>
+<h2 class="section-title">Próximos eventos</h2>
+<% if (!upcoming.length) { %>
+  <div class="empty">Nenhum evento marcado por enquanto.</div>
+<% } else { %>
+  <div class="event-list">
+    <% upcoming.forEach(function (it) { const d = u.parseDb(it.event_date); %>
+      <a class="event-row card" href="/t/<%= tab.slug %>/<%= it.id %>">
+        <div class="datebox"><b><%= it.event_date.slice(8, 10) %></b><span><%= u.MONTHS[Number(it.event_date.slice(5, 7)) - 1] %></span></div>
+        <div class="event-info">
+          <h3><%= it.title %></h3>
+          <div class="muted">
+            <%= u.fmtLongDate(it.event_date) %><%= it.end_date ? ' até ' + u.fmtDate(it.end_date) : '' %><%= it.event_time ? ' · ' + it.event_time : '' %>
+            <%= it.location ? ' · 📍 ' + it.location : '' %>
+          </div>
+          <% const _p = u.plain(it.body, 160); if (_p) { %><p class="muted small"><%= _p %></p><% } %>
+        </div>
+        <% if (it.image) { %><img class="event-thumb" src="/uploads/<%= it.image %>" alt="" loading="lazy"><% } %>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+<% if (past.length) { %>
+  <h2 class="section-title">Eventos anteriores</h2>
+  <div class="grid cards">
+    <% past.forEach(function (it) { %><%- include('../partials/item-card', { it }) %><% }) %>
+  </div>
+  <%- include('../partials/pager') %>
+<% } %>
+<%- include('../partials/foot') %>

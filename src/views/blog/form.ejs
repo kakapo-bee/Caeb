@@ -1,0 +1,25 @@
+<%- include('../partials/head') %>
+<nav class="crumbs"><a href="/t/<%= tab.slug %>"><%= tab.title %></a><span>›</span><span><%= title %></span></nav>
+<div class="card form-card">
+  <h1><%= title %></h1>
+  <form method="post" action="<%= post.id ? '/blog/' + post.id + '/editar' : '/blog/novo' %>" enctype="multipart/form-data" class="form">
+    <label>Título
+      <input name="title" required minlength="3" maxlength="150" value="<%= post.title || '' %>">
+    </label>
+    <label>Texto
+      <%- include('../partials/editor', { name: 'body', value: post.body || '', rows: 14 }) %>
+    </label>
+    <label>Imagem (opcional)
+      <input type="file" name="image" accept="image/png,image/jpeg,image/gif,image/webp">
+    </label>
+    <% if (post.image) { %>
+      <div class="current-file"><img src="/uploads/<%= post.image %>" alt="" class="thumb"> <label class="check"><input type="checkbox" name="remove_image" value="1"> remover imagem atual</label></div>
+    <% } %>
+    <p class="muted small">Lembre-se: o blog é um espaço coletivo. Postagens desrespeitosas podem ser apagadas pela gestão.</p>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit"><%= post.id ? 'Salvar' : 'Publicar' %></button>
+      <a class="btn btn-ghost" href="<%= post.id ? '/blog/' + post.id : '/t/' + tab.slug %>">Cancelar</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/foot') %>

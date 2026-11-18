@@ -1,0 +1,21 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Administração</h1></div>
+<%- include('nav') %>
+<p>Olá, <b><%= user.username %></b>! Você está logado(a) como <span class="tag tag-admin"><%= u.ROLES[user.role] %></span>.
+<% if (chapa) { %> A gestão atual do site é <b><%= chapa.name %></b>.<% } %></p>
+<div class="stats">
+  <div class="card stat"><b><%= stats.users %></b><span>contas</span></div>
+  <div class="card stat"><b><%= stats.admins %></b><span>administrativas</span></div>
+  <div class="card stat"><b><%= stats.items %></b><span>publicações nas abas</span></div>
+  <div class="card stat"><b><%= stats.posts %></b><span>postagens no blog</span></div>
+</div>
+<div class="grid cards">
+  <a class="card tile" href="/admin/abas"><h3>🗂 Abas e sub-abas</h3><p class="muted">Criar, renomear, reordenar, ocultar ou apagar abas do menu.</p></a>
+  <a class="card tile" href="/admin/chapas"><h3>🌱 Chapas e memorial</h3><p class="muted">Mudar a gestão atual, escrever o memorial e enviar fotos de chapas antigas.</p></a>
+  <a class="card tile" href="/admin/usuarios"><h3>👥 Usuários</h3><p class="muted">Promover/rebaixar contas e bloquear pessoas no blog.</p></a>
+  <a class="card tile" href="/admin/config"><h3>⚙️ Configurações</h3><p class="muted">Nome do site, rodapé, Instagram e página inicial.</p></a>
+  <a class="card tile" href="/t/manual"><h3>📘 Manual</h3><p class="muted">Passo a passo de como mexer em tudo do site.</p></a>
+  <% if (user.role === 'acolhimento') { %><a class="card tile" href="/acolhimento"><h3>💙 Denúncias</h3><p class="muted">Caixa de denúncias (somente Acolhimento).</p></a><% } %>
+</div>
+<p class="muted small">Para publicar algo, vá até a aba desejada (ex.: Mural de Notícias) e clique em <b>+ Nova publicação</b>.</p>
+<%- include('../partials/foot') %>

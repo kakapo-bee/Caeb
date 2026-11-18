@@ -1,0 +1,56 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Usuários</h1></div>
+<%- include('nav') %>
+<form method="get" class="card form row-form">
+  <label>Buscar por nome ou e-mail <input name="q" value="<%= q %>" placeholder="Ex.: maria ou maria@ufpr.br"></label>
+  <label>Tipo
+    <select name="papel">
+      <option value="">Todos</option>
+      <option value="admin" <%= papel === 'admin' ? 'selected' : '' %>>Somente administrativas</option>
+      <% Object.keys(ROLES).forEach(function (r) { %><option value="<%= r %>" <%= papel === r ? 'selected' : '' %>><%= ROLES[r] %></option><% }) %>
+    </select>
+  </label>
+  <button class="btn btn-primary" type="submit">Buscar</button>
+</form>
+<div class="table-wrap">
+<table class="table">
+  <thead><tr><th>Conta</th><th>E-mail</th><th>Cargo</th><th>Blog</th></tr></thead>
+  <tbody>
+  <% users.forEach(function (x) { %>
+    <tr>
+      <td class="nowrap"><a class="author-link" href="/u/<%= x.id %>"><%- include('../partials/avatar', { a: x, size: 32 }) %> <b><%= x.username %></b></a><% if (x.id === user.id) { %> <small class="muted">(você)</small><% } %></td>
+      <td class="small"><%= x.email %></td>
+      <td>
+        <% if (x.id === user.id) { %><span class="tag tag-admin"><%= ROLES[x.role] %></span>
+        <% } else { %>
+        <form method="post" action="/admin/usuarios/<%= x.id %>/papel" class="inline-form">
+          <select name="role" data-autosubmit aria-label="Cargo de <%= x.username %>">
+            <% Object.keys(ROLES).forEach(function (r) { %><option value="<%= r %>" <%= x.role === r ? 'selected' : '' %>><%= ROLES[r] %></option><% }) %>
+          </select>
+          <noscript><button class="btn btn-soft small">OK</button></noscript>
+        </form>
+        <% } %>
+      </td>
+      <td class="nowrap">
+        <span class="small muted"><%= x.posts %> posts</span>
+        <form method="post" action="/admin/usuarios/<%= x.id %>/blog" class="inline-form">
+          <input type="hidden" name="blocked" value="<%= x.blog_blocked ? 0 : 1 %>">
+          <button class="btn small <%= x.blog_blocked ? 'btn-danger' : 'btn-ghost' %>" type="submit" title="<%= x.blog_blocked ? 'Clique para desbloquear' : 'Clique para bloquear' %>"><%= x.blog_blocked ? '🚫 Bloqueado(a)' : '✅ Pode postar' %></button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+</div>
+<% if (!users.length) { %><div class="empty">Ninguém encontrado.</div><% } %>
+
+<div class="card danger-zone">
+  <h2>Troca de gestão</h2>
+  <p>Quando uma nova chapa assumir: (1) cadastre-a em <a href="/admin/chapas">Chapas</a> e torne-a a gestão atual; (2) promova as contas da nova chapa aqui em cima; (3) use o botão abaixo para rebaixar <b>todas</b> as outras contas administrativas para discente (a sua conta continua administrativa — peça para alguém da nova gestão te rebaixar depois).</p>
+  <form method="post" action="/admin/usuarios/rebaixar-todos" class="form row-form" data-confirm="Rebaixar TODAS as contas administrativas (menos a sua) para discente?">
+    <label>Digite REBAIXAR para confirmar <input name="confirm" required autocomplete="off"></label>
+    <button class="btn btn-danger" type="submit">Rebaixar todas as outras contas administrativas</button>
+  </form>
+</div>
+<%- include('../partials/foot') %>

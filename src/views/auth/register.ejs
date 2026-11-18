@@ -1,0 +1,25 @@
+<%- include('../partials/head') %>
+<div class="auth">
+  <div class="card auth-card">
+    <img class="auth-logo" src="/static/img/logo-192.png" alt="" width="84" height="84">
+    <h1>Criar conta</h1>
+    <p class="muted small">Só é possível criar conta com e-mail institucional <b>@<%= domain %></b>. Vamos te mandar um e-mail para confirmar.</p>
+    <form method="post" action="/cadastro" class="form">
+      <label>E-mail institucional
+        <input type="email" name="email" required autocomplete="email" value="<%= form.email || '' %>" placeholder="seunome@<%= domain %>">
+      </label>
+      <label>Nome de usuário <small class="muted">(aparece nas suas postagens; dá para mudar depois)</small>
+        <input name="username" required minlength="3" maxlength="30" value="<%= form.username || '' %>" autocomplete="nickname">
+      </label>
+      <label>Senha <small class="muted">(mínimo 8 caracteres)</small>
+        <input type="password" name="password" required minlength="8" autocomplete="new-password">
+      </label>
+      <label>Repita a senha
+        <input type="password" name="password2" required minlength="8" autocomplete="new-password">
+      </label>
+      <button class="btn btn-primary block" type="submit">Enviar e-mail de confirmação</button>
+    </form>
+    <p class="auth-links">Já tem conta? <a href="/entrar">Entrar</a></p>
+  </div>
+</div>
+<%- include('../partials/foot') %>

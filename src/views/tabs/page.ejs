@@ -1,0 +1,6 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead') %>
+<% if ((!intro || !intro.trim()) && !subtabs.length) { %>
+  <div class="empty">Esta página ainda não tem texto.<% if (canEdit) { %> Clique em <b>✎ Editar texto</b>.<% } %></div>
+<% } %>
+<%- include('../partials/foot') %>

@@ -1,0 +1,23 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead') %>
+<div class="blog-bar">
+  <div class="seg">
+    <a class="<%= sort === 'recentes' ? 'on' : '' %>" href="?ordem=recentes">🕒 Recentes</a>
+    <a class="<%= sort === 'curtidos' ? 'on' : '' %>" href="?ordem=curtidos">💚 Mais curtidos</a>
+  </div>
+  <% if (!user) { %>
+    <a class="btn btn-primary" href="/entrar?voltar=/blog/novo">✎ Entre para escrever</a>
+  <% } else if (user.blog_blocked) { %>
+    <span class="tag tag-warn">Sua conta está bloqueada para publicar no blog</span>
+  <% } else { %>
+    <a class="btn btn-primary" href="/blog/novo">✎ Escrever postagem</a>
+  <% } %>
+</div>
+<% if (!posts.length) { %>
+  <div class="empty">Ninguém publicou ainda. Que tal ser a primeira pessoa? 🌱</div>
+<% } %>
+<div class="blog-list">
+  <% posts.forEach(function (p) { %><%- include('../blog/card', { p }) %><% }) %>
+</div>
+<%- include('../partials/pager') %>
+<%- include('../partials/foot') %>

@@ -1,0 +1,11 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead', { newButton: 'Nova publicação' }) %>
+<% if (!items.length) { %>
+  <div class="empty">Nada publicado aqui ainda.<% if (canEdit) { %> Clique em <b>+ Nova publicação</b> para começar.<% } %></div>
+<% } else { %>
+  <div class="grid cards">
+    <% items.forEach(function (it) { %><%- include('../partials/item-card', { it }) %><% }) %>
+  </div>
+  <%- include('../partials/pager') %>
+<% } %>
+<%- include('../partials/foot') %>

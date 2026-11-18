@@ -1,0 +1,31 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead', { newButton: 'Adicionar refeição' }) %>
+<div class="cal-head">
+  <a class="btn btn-soft" href="?semana=<%= offset - 1 %>">← Semana anterior</a>
+  <h2>Semana de <%= u.fmtDate(days[0].date) %> a <%= u.fmtDate(days[6].date) %></h2>
+  <a class="btn btn-soft" href="?semana=<%= offset + 1 %>">Próxima semana →</a>
+  <% if (offset) { %><a class="btn btn-ghost" href="/t/<%= tab.slug %>">Esta semana</a><% } %>
+</div>
+<div class="menu-week">
+  <% days.forEach(function (d) { %>
+    <section class="card menu-day<%= d.today ? ' today' : '' %>">
+      <header>
+        <b><%= u.fmtLongDate(d.date).split(',')[0] %></b>
+        <span class="muted"><%= u.fmtDate(d.date).slice(0, 5) %></span>
+        <% if (d.today) { %><span class="tag tag-today">hoje</span><% } %>
+      </header>
+      <% if (!d.items.length) { %>
+        <p class="muted small">Sem cardápio cadastrado.</p>
+      <% } %>
+      <% d.items.forEach(function (it) { %>
+        <div class="meal">
+          <h4><%= it.title %><% if (it.event_time) { %> <small class="muted"><%= it.event_time %></small><% } %></h4>
+          <div class="prose small"><%- u.md(it.body) %></div>
+          <% if (canEdit) { %><a class="small" href="/itens/<%= it.id %>/editar">✎ editar</a><% } %>
+        </div>
+      <% }) %>
+      <% if (canEdit) { %><a class="small add-link" href="/t/<%= tab.slug %>/novo?data=<%= d.date %>">+ refeição</a><% } %>
+    </section>
+  <% }) %>
+</div>
+<%- include('../partials/foot') %>

@@ -1,0 +1,45 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Minha conta</h1><a class="btn btn-soft" href="/u/<%= user.id %>">Ver meu perfil público</a></div>
+<div class="account-grid">
+  <section class="card profile-card">
+    <%- include('../partials/avatar', { a: user, size: 120 }) %>
+    <h2><%= user.username %></h2>
+    <span class="tag <%= isAdmin ? 'tag-admin' : '' %>"><%= u.ROLES[user.role] %></span>
+    <dl class="facts">
+      <div><dt>E-mail</dt><dd><%= user.email %></dd></div>
+      <div><dt>Tipo de conta</dt><dd><%= isAdmin ? 'Administrativa' : 'Discente' %></dd></div>
+      <div><dt>Postagens no blog</dt><dd><%= count %></dd></div>
+      <div><dt>Membro desde</dt><dd><%= u.fmtDate(user.created_at) %></dd></div>
+    </dl>
+    <% if (user.bio) { %><p class="bio"><%= user.bio %></p><% } %>
+    <% if (user.blog_blocked) { %><p class="tag tag-warn">Bloqueado(a) para publicar no blog</p><% } %>
+  </section>
+
+  <section class="card">
+    <h2>Editar perfil</h2>
+    <form method="post" action="/conta/perfil" enctype="multipart/form-data" class="form">
+      <label>Nome de usuário
+        <input name="username" required minlength="3" maxlength="30" value="<%= user.username %>">
+      </label>
+      <label>Foto de perfil
+        <input type="file" name="avatar" accept="image/png,image/jpeg,image/gif,image/webp" data-avatar-preview>
+      </label>
+      <% if (user.avatar) { %><label class="check"><input type="checkbox" name="remove_avatar" value="1"> remover foto atual</label><% } %>
+      <label>Descrição breve <small class="muted"><span data-count-for="bio"><%= [...(user.bio || '')].length %></span>/300</small>
+        <textarea id="bio" name="bio" rows="4" maxlength="300" data-counter><%= user.bio %></textarea>
+      </label>
+      <button class="btn btn-primary" type="submit">Salvar perfil</button>
+    </form>
+
+    <h2 class="mt-lg">Mudar senha</h2>
+    <form method="post" action="/conta/senha" class="form">
+      <label>Senha atual <input type="password" name="current" required autocomplete="current-password"></label>
+      <div class="row2">
+        <label>Nova senha <input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
+        <label>Repita a nova senha <input type="password" name="password2" required minlength="8" autocomplete="new-password"></label>
+      </div>
+      <button class="btn btn-soft" type="submit">Mudar senha</button>
+    </form>
+  </section>
+</div>
+<%- include('../partials/foot') %>

@@ -1,0 +1,15 @@
+<div class="editor">
+  <div class="editor-bar" role="toolbar" aria-label="Formatação">
+    <button type="button" data-md="bold" title="Negrito"><b>N</b></button>
+    <button type="button" data-md="italic" title="Itálico"><i>I</i></button>
+    <button type="button" data-md="h2" title="Título">T</button>
+    <button type="button" data-md="ul" title="Lista">• Lista</button>
+    <button type="button" data-md="ol" title="Lista numerada">1. Lista</button>
+    <button type="button" data-md="link" title="Link">🔗 Link</button>
+    <button type="button" data-md="quote" title="Citação">❝</button>
+    <button type="button" data-md="preview" class="editor-prev" title="Pré-visualizar">👁 Ver como fica</button>
+  </div>
+  <textarea name="<%= name %>" rows="<%= locals.rows || 10 %>" <%= locals.required ? 'required' : '' %>><%= value %></textarea>
+  <div class="editor-preview prose" hidden></div>
+  <small class="muted">Dica: **negrito**, *itálico*, ## título, - lista, [texto](https://link). Uma linha em branco separa parágrafos.</small>
+</div>

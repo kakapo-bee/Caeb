@@ -1,0 +1,9 @@
+<% if (user) { %>
+<form method="post" action="/blog/<%= p.id %>/curtir" class="like-form">
+  <button type="submit" class="like<%= p.liked ? ' on' : '' %>" aria-pressed="<%= p.liked ? 'true' : 'false' %>" title="Curtir">
+    <span class="heart"><%= p.liked ? '💚' : '🤍' %></span> <span class="like-count"><%= p.likes %></span>
+  </button>
+</form>
+<% } else { %>
+<a class="like" href="/entrar?voltar=/blog/<%= p.id %>" title="Entre para curtir"><span class="heart">🤍</span> <span class="like-count"><%= p.likes %></span></a>
+<% } %>

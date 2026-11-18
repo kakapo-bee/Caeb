@@ -1,0 +1,4 @@
+<nav class="crumbs" aria-label="Caminho">
+  <% crumbs.forEach(function (c, i) { %><% if (i) { %><span>›</span><% } %><a href="/t/<%= c.slug %>"><%= c.title %></a><% }) %>
+  <% if (locals.last) { %><span>›</span><span><%= last %></span><% } %>
+</nav>

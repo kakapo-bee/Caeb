@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead', { newButton: 'Novo vídeo' }) %>
+<% if (!items.length) { %>
+  <div class="empty">Nenhum vídeo por aqui ainda.</div>
+<% } else { %>
+  <div class="grid videos">
+    <% items.forEach(function (it) { const emb = u.videoEmbed(it.video_url); %>
+      <article class="card video-card">
+        <div class="video-frame">
+          <% if (it.video_file) { %>
+            <video controls preload="metadata" src="/uploads/<%= it.video_file %>"></video>
+          <% } else if (emb) { %>
+            <iframe src="<%= emb %>" title="<%= it.title %>" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+          <% } else if (it.video_url) { %>
+            <a class="video-link" href="<%= it.video_url %>" target="_blank" rel="noopener">▶ Assistir no site original</a>
+          <% } %>
+        </div>
+        <div class="card-body">
+          <% if (it.pinned) { %><span class="tag tag-pin">📌 fixado</span><% } %>
+          <h3><a href="/t/<%= tab.slug %>/<%= it.id %>"><%= it.title %></a></h3>
+          <% const _p = u.plain(it.body, 140); if (_p) { %><p class="muted small"><%= _p %></p><% } %>
+          <small class="muted"><%= u.fmtDate(it.event_date || it.created_at) %></small>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+  <%- include('../partials/pager') %>
+<% } %>
+<%- include('../partials/foot') %>

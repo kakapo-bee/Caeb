@@ -1,0 +1,46 @@
+<%- include('../partials/head') %>
+<div class="pagehead"><h1>Chapa <%= chapa.name %> <% if (chapa.is_current) { %><span class="tag tag-date">⭐ gestão atual</span><% } %></h1>
+  <a class="btn btn-soft" href="/t/memorial?chapa=<%= chapa.id %>">Ver no memorial</a></div>
+<%- include('nav') %>
+<div class="card form-card wide">
+  <form method="post" action="/admin/chapas/<%= chapa.id %>" class="form">
+    <div class="row2">
+      <label>Nome <input name="name" required maxlength="80" value="<%= chapa.name %>"></label>
+      <label>Período <input name="period" maxlength="40" value="<%= chapa.period %>" placeholder="Ex.: 2025/2026"></label>
+    </div>
+    <label>Texto do memorial (quem fez parte, principais ações, conquistas...)
+      <%- include('../partials/editor', { name: 'description', value: chapa.description, rows: 14 }) %>
+    </label>
+    <div class="form-actions"><button class="btn btn-primary" type="submit">Salvar</button></div>
+  </form>
+</div>
+<div class="card">
+  <h2>Fotos (<%= photos.length %>)</h2>
+  <form method="post" action="/admin/chapas/<%= chapa.id %>/fotos" enctype="multipart/form-data" class="form row-form">
+    <label>Escolha uma ou várias fotos <input type="file" name="photos" multiple required accept="image/png,image/jpeg,image/gif,image/webp"></label>
+    <label>Legenda (opcional, vale para todas) <input name="caption" maxlength="200"></label>
+    <button class="btn btn-primary" type="submit">Enviar fotos</button>
+  </form>
+  <div class="gallery admin-gallery">
+    <% photos.forEach(function (p) { %>
+      <figure>
+        <img src="/uploads/<%= p.filename %>" alt="" loading="lazy">
+        <form method="post" action="/admin/fotos/<%= p.id %>" class="inline-form">
+          <input name="caption" value="<%= p.caption %>" placeholder="legenda" maxlength="200">
+          <button class="btn btn-soft small" type="submit">Salvar</button>
+        </form>
+        <form method="post" action="/admin/fotos/<%= p.id %>" data-confirm="Apagar esta foto?">
+          <input type="hidden" name="action" value="apagar"><button class="btn btn-danger small" type="submit">Apagar</button>
+        </form>
+      </figure>
+    <% }) %>
+  </div>
+</div>
+<% if (!chapa.is_current) { %>
+<div class="card danger-zone">
+  <h2>Apagar chapa</h2>
+  <p>As fotos e o texto do memorial serão apagados. As publicações continuam no site.</p>
+  <form method="post" action="/admin/chapas/<%= chapa.id %>/apagar" data-confirm="Apagar a chapa <%= chapa.name %>?"><button class="btn btn-danger" type="submit">🗑 Apagar chapa</button></form>
+</div>
+<% } %>
+<%- include('../partials/foot') %>

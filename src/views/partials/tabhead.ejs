@@ -1,0 +1,23 @@
+<% if (crumbs && crumbs.length > 1) { %>
+<nav class="crumbs" aria-label="Caminho">
+  <% crumbs.forEach(function (c, i) { %><% if (i) { %><span>›</span><% } %><a href="/t/<%= c.slug %>"><%= c.title %></a><% }) %>
+</nav>
+<% } %>
+<div class="pagehead">
+  <div>
+    <h1><%= tab.title %><% if (tab.admin_only) { %> <span class="tag tag-lock">🔒 só administração</span><% } %><% if (!tab.visible) { %> <span class="tag">oculta</span><% } %></h1>
+  </div>
+  <% if (canEdit) { %>
+  <div class="pagehead-actions">
+    <% if (locals.newButton) { %><a class="btn btn-primary" href="/t/<%= tab.slug %>/novo">+ <%= newButton %></a><% } %>
+    <a class="btn btn-soft" href="/t/<%= tab.slug %>/texto">✎ Editar texto</a>
+    <a class="btn btn-soft" href="/admin/abas/<%= tab.id %>">⚙ Aba</a>
+  </div>
+  <% } %>
+</div>
+<% if (intro && intro.trim()) { %><div class="intro prose"><%- intro %></div><% } %>
+<% if (subtabs && subtabs.length) { %>
+<div class="subtabs">
+  <% subtabs.forEach(function (s) { %><a class="subtab" href="/t/<%= s.slug %>"><%= s.title %><% if (!s.visible) { %> (oculta)<% } %></a><% }) %>
+</div>
+<% } %>

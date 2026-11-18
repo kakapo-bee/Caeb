@@ -1,0 +1,8 @@
+<div class="admin-nav">
+  <a href="/admin" class="<%= path === '/admin' ? 'on' : '' %>">🏠 Início</a>
+  <a href="/admin/abas" class="<%= path.startsWith('/admin/abas') ? 'on' : '' %>">🗂 Abas</a>
+  <a href="/admin/chapas" class="<%= path.startsWith('/admin/chapas') ? 'on' : '' %>">🌱 Chapas e memorial</a>
+  <a href="/admin/usuarios" class="<%= path.startsWith('/admin/usuarios') ? 'on' : '' %>">👥 Usuários</a>
+  <a href="/admin/config" class="<%= path.startsWith('/admin/config') ? 'on' : '' %>">⚙️ Configurações</a>
+  <a href="/t/manual">📘 Manual</a>
+</div>

@@ -1,0 +1,52 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead') %>
+<% if (!chapas.length) { %>
+  <div class="empty">Nenhuma chapa cadastrada.</div>
+<% } else { %>
+  <form class="chapa-picker card" method="get">
+    <label for="chapa-sel"><b>Escolha a chapa:</b></label>
+    <select id="chapa-sel" name="chapa" data-autosubmit>
+      <% chapas.forEach(function (c) { %>
+        <option value="<%= c.id %>" <%= sel && sel.id === c.id ? 'selected' : '' %>><%= c.name %><%= c.period ? ' (' + c.period + ')' : '' %><%= c.is_current ? ' — gestão atual' : '' %></option>
+      <% }) %>
+    </select>
+    <noscript><button class="btn btn-primary" type="submit">Ver</button></noscript>
+  </form>
+  <div class="chapa-chips">
+    <% chapas.forEach(function (c) { %>
+      <a class="chip<%= sel && sel.id === c.id ? ' on' : '' %>" href="?chapa=<%= c.id %>"><%= c.name %><% if (c.period) { %> <small><%= c.period %></small><% } %></a>
+    <% }) %>
+  </div>
+
+  <% if (sel) { %>
+  <section class="chapa-hero card">
+    <div>
+      <span class="eyebrow"><%= sel.is_current ? 'Gestão atual' : 'Gestão anterior' %></span>
+      <h2>Chapa <%= sel.name %></h2>
+      <% if (sel.period) { %><p class="muted"><%= sel.period %></p><% } %>
+    </div>
+    <% if (isAdmin) { %><a class="btn btn-soft" href="/admin/chapas/<%= sel.id %>">✎ Editar memorial desta chapa</a><% } %>
+  </section>
+  <% if (sel.description && sel.description.trim()) { %><div class="card prose memorial-text"><%- u.md(sel.description) %></div><% } %>
+
+  <% if (photos.length) { %>
+    <h2 class="section-title">Fotos</h2>
+    <div class="gallery">
+      <% photos.forEach(function (p) { %>
+        <figure><a href="/uploads/<%= p.filename %>" target="_blank" rel="noopener"><img src="/uploads/<%= p.filename %>" alt="<%= p.caption %>" loading="lazy"></a><% if (p.caption) { %><figcaption><%= p.caption %></figcaption><% } %></figure>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <h2 class="section-title">Publicações feitas por esta gestão</h2>
+  <% if (!items.length) { %>
+    <div class="empty">Nenhuma publicação registrada no site para esta chapa.</div>
+  <% } else { %>
+    <div class="grid cards">
+      <% items.forEach(function (it) { %><%- include('../partials/item-card', { it }) %><% }) %>
+    </div>
+    <%- include('../partials/pager', { query: { chapa: sel.id } }) %>
+  <% } %>
+  <% } %>
+<% } %>
+<%- include('../partials/foot') %>

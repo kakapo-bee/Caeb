@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title ? title + ' · ' : '' %><%= settings.site_title %></title>
+  <meta name="description" content="<%= settings.site_subtitle %> — UFPR">
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css?v=1">
+  <script src="/static/js/app.js?v=1" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="/">
+      <img src="/static/img/logo-192.png" alt="Logo do CAEB" width="56" height="56">
+      <span class="brand-text">
+        <strong><%= settings.site_title %></strong>
+        <small><%= settings.site_subtitle %></small>
+      </span>
+    </a>
+    <% if (chapa) { %>
+      <a class="gestao" href="/t/memorial?chapa=<%= chapa.id %>" title="Gestão atual do CAEB">
+        <span class="gestao-dot"></span>Gestão <b><%= chapa.name %></b>
+      </a>
+    <% } %>
+    <div class="userbox">
+      <% if (user) { %>
+        <% if (newReports) { %><a class="pill pill-alert" href="/acolhimento" title="Denúncias novas"><%= newReports %> nova<%= newReports > 1 ? 's' : '' %></a><% } %>
+        <details class="usermenu">
+          <summary>
+            <%- include('avatar', { a: user, size: 38 }) %>
+            <span class="usermenu-name"><%= user.username %></span>
+          </summary>
+          <div class="usermenu-list">
+            <div class="usermenu-role"><%= u.ROLES[user.role] %></div>
+            <a href="/conta">👤 Minha conta</a>
+            <a href="/u/<%= user.id %>">🌱 Meu perfil público</a>
+            <% if (isAdmin) { %><a href="/admin">⚙️ Administração</a><% } %>
+            <% if (user.role === 'acolhimento') { %><a href="/acolhimento">💙 Caixa de denúncias</a><% } %>
+            <form method="post" action="/sair"><button type="submit">↩ Sair</button></form>
+          </div>
+        </details>
+      <% } else { %>
+        <a class="btn btn-ghost-light" href="/entrar">Entrar</a>
+        <a class="btn btn-yellow" href="/cadastro">Criar conta</a>
+      <% } %>
+    </div>
+  </div>
+</header>
+<nav class="mainnav" aria-label="Abas do site">
+  <div class="wrap mainnav-inner">
+    <button class="navtoggle" type="button" aria-expanded="false" aria-controls="navlist">☰ Menu</button>
+    <ul id="navlist" class="navlist">
+      <% nav.forEach(function (t) {
+           const active = (locals.tab && (tab.id === t.id || (locals.crumbs && crumbs.some(c => c.id === t.id)))); %>
+        <li class="navitem<%= t.children.length ? ' has-sub' : '' %><%= active ? ' active' : '' %><%= t.admin_only ? ' admin-tab' : '' %>">
+          <a href="/t/<%= t.slug %>"><%= t.title %><% if (t.admin_only) { %> 🔒<% } %></a>
+          <% if (t.children.length) { %>
+            <button class="subtoggle" type="button" aria-label="Abrir sub-abas de <%= t.title %>">▾</button>
+            <ul class="subnav">
+              <% t.children.forEach(function (c) { %>
+                <li><a href="/t/<%= c.slug %>"><%= c.title %></a>
+                  <% if (c.children.length) { %><ul><% c.children.forEach(function (g) { %><li><a href="/t/<%= g.slug %>">↳ <%= g.title %></a></li><% }) %></ul><% } %>
+                </li>
+              <% }) %>
+            </ul>
+          <% } %>
+        </li>
+      <% }) %>
+      <% if (isAdmin) { %><li class="navitem admin-link"><a href="/admin">⚙️ Admin</a></li><% } %>
+    </ul>
+  </div>
+</nav>
+<main class="wrap main">
+<% if (flash) { %>
+  <div class="flash flash-<%= flash.type %>" role="status"><%= flash.msg %></div>
+<% } %>

@@ -1,0 +1,36 @@
+<%- include('../partials/head') %>
+<%- include('../partials/crumbs', { last: item.title }) %>
+<article class="card article">
+  <div class="card-meta">
+    <% if (item.pinned) { %><span class="tag tag-pin">📌 fixado</span><% } %>
+    <% if (item.event_date) { %><span class="tag tag-date">📅 <%= u.fmtLongDate(item.event_date) %><%= item.end_date ? ' até ' + u.fmtLongDate(item.end_date) : '' %><%= item.event_time ? ' · ' + item.event_time : '' %></span><% } %>
+    <% if (item.location) { %><span class="tag">📍 <%= item.location %></span><% } %>
+  </div>
+  <h1><%= item.title %></h1>
+  <p class="muted small">Publicado em <%= u.fmtDateTime(item.created_at) %><%= item.chapa_name ? ' · Gestão ' + item.chapa_name : '' %><%= item.updated_at ? ' · atualizado em ' + u.fmtDate(item.updated_at) : '' %></p>
+  <% if (item.image) { %><img class="article-img" src="/uploads/<%= item.image %>" alt=""><% } %>
+  <% const emb = u.videoEmbed(item.video_url); %>
+  <% if (item.video_file) { %>
+    <div class="video-frame"><video controls preload="metadata" src="/uploads/<%= item.video_file %>"></video></div>
+  <% } else if (emb) { %>
+    <div class="video-frame"><iframe src="<%= emb %>" title="<%= item.title %>" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+  <% } else if (item.video_url) { %>
+    <p><a class="btn btn-primary" href="<%= item.video_url %>" target="_blank" rel="noopener">▶ Assistir vídeo</a></p>
+  <% } %>
+  <div class="prose"><%- u.md(item.body) %></div>
+  <% if (item.attachment) { %>
+    <div class="attachment">
+      <a class="btn btn-primary" href="/uploads/<%= item.attachment %>" target="_blank" rel="noopener">📄 Abrir <%= item.attachment_name || 'arquivo' %></a>
+      <% if (/\.pdf$/i.test(item.attachment)) { %><iframe class="pdf" src="/uploads/<%= item.attachment %>" title="<%= item.attachment_name %>"></iframe><% } %>
+    </div>
+  <% } %>
+  <% if (canEdit) { %>
+  <footer class="actions admin-actions">
+    <a class="btn btn-soft" href="/itens/<%= item.id %>/editar">✎ Editar</a>
+    <form method="post" action="/itens/<%= item.id %>/apagar" data-confirm="Apagar esta publicação? Isso não pode ser desfeito.">
+      <button class="btn btn-danger" type="submit">🗑 Apagar</button>
+    </form>
+  </footer>
+  <% } %>
+</article>
+<%- include('../partials/foot') %>

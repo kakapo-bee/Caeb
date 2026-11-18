@@ -1,0 +1,42 @@
+<%- include('../partials/head') %>
+<%- include('../partials/tabhead', { newButton: 'Nova data' }) %>
+<div class="cal-head">
+  <a class="btn btn-soft" href="?mes=<%= prev %>">←</a>
+  <h2><%= monthLabel %></h2>
+  <a class="btn btn-soft" href="?mes=<%= next %>">→</a>
+  <a class="btn btn-ghost" href="/t/<%= tab.slug %>">Hoje</a>
+</div>
+<div class="calendar" role="table" aria-label="Calendário de <%= monthLabel %>">
+  <div class="cal-row cal-dows" role="row">
+    <% ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].forEach(function (d) { %><div role="columnheader"><%= d %></div><% }) %>
+  </div>
+  <% weeks.forEach(function (w) { %>
+    <div class="cal-row" role="row">
+      <% w.forEach(function (d) { %>
+        <div class="cal-day<%= d.inMonth ? '' : ' out' %><%= d.today ? ' today' : '' %>" role="cell">
+          <span class="cal-num"><%= Number(d.date.slice(8)) %></span>
+          <% if (canEdit && d.inMonth) { %><a class="cal-add" href="/t/<%= tab.slug %>/novo?data=<%= d.date %>" title="Adicionar data">+</a><% } %>
+          <% d.items.forEach(function (it) { %>
+            <a class="cal-ev<%= it.tab_type === 'events' ? ' is-event' : '' %>" href="/t/<%= it.tab_slug %>/<%= it.id %>" title="<%= it.title %>"><%= it.event_time ? it.event_time + ' ' : '' %><%= it.title %></a>
+          <% }) %>
+        </div>
+      <% }) %>
+    </div>
+  <% }) %>
+</div>
+<p class="legend"><span class="cal-ev">Data acadêmica</span> <span class="cal-ev is-event">Evento</span></p>
+
+<h2 class="section-title">Neste mês</h2>
+<% if (!items.length) { %><div class="empty">Nenhuma data cadastrada neste mês.</div><% } else { %>
+  <ul class="cal-list">
+    <% items.forEach(function (it) { %>
+      <li class="card">
+        <span class="tag tag-date"><%= u.fmtDate(it.event_date) %><%= it.end_date ? ' – ' + u.fmtDate(it.end_date) : '' %></span>
+        <a href="/t/<%= it.tab_slug %>/<%= it.id %>"><b><%= it.title %></b></a>
+        <% if (it.tab_type === 'events') { %><span class="tag">evento</span><% } %>
+        <% if (it.location) { %><span class="muted small">📍 <%= it.location %></span><% } %>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+<%- include('../partials/foot') %>
